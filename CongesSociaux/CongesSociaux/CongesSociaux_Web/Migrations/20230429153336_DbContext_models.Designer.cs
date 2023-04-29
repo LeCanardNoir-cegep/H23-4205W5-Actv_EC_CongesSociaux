@@ -4,6 +4,7 @@ using CongesSociaux_Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CongesSociaux_Web.Migrations
 {
     [DbContext(typeof(CongeSociauxDbContext))]
-    partial class CongeSociauxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230429153336_DbContext_models")]
+    partial class DbContext_models
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
