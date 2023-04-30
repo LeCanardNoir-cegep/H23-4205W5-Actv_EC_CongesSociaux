@@ -8,10 +8,10 @@ namespace CongesSociaux_Web.Data.Repository.IRepository
 {
     public interface IUnitOfWork : IDisposable
     {
-        //IEnterpriseRepository Enterprise { get; }
-        //IEquipmentRecordRepository EquipmentRecord { get; }
-        //IEquipmentRepository Equipment { get; }   
-        //IGroupRepository Group { get; }
+
+        public IDepartementRepository Departements { get; }
+        public IEnseignantRepository Enseignants { get; }
+        public ISoutienRepository Soutiens { get; }
 
         void save();
     }

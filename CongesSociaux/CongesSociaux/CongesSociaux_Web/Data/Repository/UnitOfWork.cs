@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CEGES_DataAccess.Repository
+namespace CongesSociaux_Web.Data.Repository
 {
     public class UnitOfWork : IUnitOfWork
     {

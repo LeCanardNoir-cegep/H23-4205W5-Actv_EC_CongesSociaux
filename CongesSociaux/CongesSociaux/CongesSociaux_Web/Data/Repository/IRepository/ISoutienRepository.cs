@@ -1,5 +1,4 @@
-﻿using CongesSociaux_Web.Data;
-using CongesSociaux_Web.Models;
+﻿using CongesSociaux_Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
