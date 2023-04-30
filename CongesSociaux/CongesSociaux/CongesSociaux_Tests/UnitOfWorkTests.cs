@@ -1,4 +1,6 @@
 using CongesSociaux_Web.Data;
+using CongesSociaux_Web.Data.Repository;
+using CongesSociaux_Web.Data.Repository.IRepository;
 using CongesSociaux_Web.Models;
 using CongesSociaux_Web.Services;
 using CongesSociaux_Web.Services.Interfaces;
@@ -6,17 +8,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CongesSociaux_Tests
 {
-    public class DepartementServiceTests
+    public class UnitOfWorkTests
     {
         private DbContextOptions<CongeSociauxDbContext> _mockDbContextOptions;
 
-        public DepartementServiceTests() 
+        public UnitOfWorkTests() 
         {
             _mockDbContextOptions = new DbContextOptionsBuilder<CongeSociauxDbContext>().UseInMemoryDatabase("DbContextTest").Options;
         }
 
         [Fact]
-        public async void GetAllDataTest_OK()
+        public async void GetAllDepartementsTest_OK()
         {
             // ARRANGE
             Departement departement = new Departement() { Id = 1, Name = "depFoo", Code = 300};
@@ -32,9 +34,9 @@ namespace CongesSociaux_Tests
                 await mockDbContext.AddAsync(enseignant);
                 await mockDbContext.SaveChangesAsync();
 
-                IDepartementService<Departement> service = new DepartementService(mockDbContext);
+                IUnitOfWork service = new UnitOfWork(mockDbContext);
 
-                result = await service.GetAllAsync();
+                result = await service.Departements.GetAllAsync();
 
             }
 
@@ -48,7 +50,7 @@ namespace CongesSociaux_Tests
 
 
         [Fact]
-        public async void GetDataByIdTest_OK()
+        public async void GetDepartementByIdTest_OK()
         {
             // ARRANGE
             Departement departement = new Departement() { Id = 1, Name = "depFoo", Code = 300 };
@@ -64,9 +66,9 @@ namespace CongesSociaux_Tests
                 await mockDbContext.AddAsync(enseignant);
                 await mockDbContext.SaveChangesAsync();
 
-                IDepartementService<Departement> service = new DepartementService(mockDbContext);
+                IUnitOfWork service = new UnitOfWork(mockDbContext);
 
-                result = await service.GetByIdAsync(1);
+                result = await service.Departements.GetFirstOrDefaultAsync( d => d.Id == 1 );
 
             }
 
