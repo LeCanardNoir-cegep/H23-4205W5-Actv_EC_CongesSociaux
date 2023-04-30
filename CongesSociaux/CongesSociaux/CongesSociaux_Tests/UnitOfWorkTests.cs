@@ -2,8 +2,6 @@ using CongesSociaux_Web.Data;
 using CongesSociaux_Web.Data.Repository;
 using CongesSociaux_Web.Data.Repository.IRepository;
 using CongesSociaux_Web.Models;
-using CongesSociaux_Web.Services;
-using CongesSociaux_Web.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace CongesSociaux_Tests
