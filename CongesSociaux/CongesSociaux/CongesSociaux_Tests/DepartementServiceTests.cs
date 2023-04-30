@@ -16,7 +16,7 @@ namespace CongesSociaux_Tests
         }
 
         [Fact]
-        public async void GetAllDataOK()
+        public async void GetAllDataTest_OK()
         {
             // ARRANGE
             Departement departement = new Departement() { Id = 1, Name = "depFoo", Code = 300};
@@ -42,6 +42,38 @@ namespace CongesSociaux_Tests
             Assert.Equal(1, result.Count());
             Assert.Equal("depFoo", result.First().Name);
             Assert.Equal("Footer", result.First().Enseignants.First().Specialite);
+
+        }
+
+
+
+        [Fact]
+        public async void GetDataByIdTest_OK()
+        {
+            // ARRANGE
+            Departement departement = new Departement() { Id = 1, Name = "depFoo", Code = 300 };
+            Enseignant enseignant = new Enseignant() { Id = 1, Prenom = "Foo", Nom = "Bar", DepartementId = 1, Specialite = "Footer", DateEmbauche = new DateTime() };
+
+            Departement result = null;
+
+            // ACT
+            using (var mockDbContext = new CongeSociauxDbContext(_mockDbContextOptions))
+            {
+                mockDbContext.Database.EnsureDeletedAsync();
+                await mockDbContext.AddAsync(departement);
+                await mockDbContext.AddAsync(enseignant);
+                await mockDbContext.SaveChangesAsync();
+
+                IDepartementService<Departement> service = new DepartementService(mockDbContext);
+
+                result = await service.GetByIdAsync(1);
+
+            }
+
+            // ASSERT
+            Assert.Equal(departement, result);
+            Assert.Equal("depFoo", result.Name);
+            Assert.Equal("Footer", result.Enseignants.First().Specialite);
 
         }
     }
