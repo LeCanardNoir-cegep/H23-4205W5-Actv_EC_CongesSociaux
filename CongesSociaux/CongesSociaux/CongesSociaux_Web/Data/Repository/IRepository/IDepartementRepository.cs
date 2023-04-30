@@ -1,0 +1,16 @@
+﻿using CongesSociaux_Web.Data;
+using CongesSociaux_Web.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CongesSociaux_Web.Data.Repository.IRepository
+{
+    public interface IDepartementRepository : IRepositoryAsync<Departement>
+    {
+        //new void Update(Group group);
+        //new void UpdateRange(IEnumerable<Group> groups);
+    }
+}
