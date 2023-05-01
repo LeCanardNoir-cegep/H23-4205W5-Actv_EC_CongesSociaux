@@ -1,4 +1,5 @@
 ﻿using CongesSociaux_Web.Data.Repository.IRepository;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -6,9 +7,9 @@ namespace CongesSociaux_Web.Data.Repository
 {
 	public class RepositoryAsync<T> : IRepositoryAsync<T> where T : class
 	{
-		private readonly DbContext _db;
+		protected readonly CongeSociauxDbContext _db;
 
-		public RepositoryAsync(DbContext db)
+		public RepositoryAsync(CongeSociauxDbContext db)
 		{
 			_db = db;
 		}

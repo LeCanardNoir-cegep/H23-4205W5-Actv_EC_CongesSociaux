@@ -6,16 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CongesSociaux_Web.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace CongesSociaux_Web.Data.Repository
 {
     public class EnseignantRepository : RepositoryAsync<Enseignant>, IEnseignantRepository
     {
-        private readonly DbContext _db;
 
-        public EnseignantRepository(DbContext db) : base(db)
-        {
-            _db = db;
-        }
+        public EnseignantRepository(CongeSociauxDbContext db) : base(db){}
     }
 }

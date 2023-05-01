@@ -1,6 +1,7 @@
 ﻿using CongesSociaux_Web.Data;
 using CongesSociaux_Web.Data.Repository;
 using CongesSociaux_Web.Data.Repository.IRepository;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;

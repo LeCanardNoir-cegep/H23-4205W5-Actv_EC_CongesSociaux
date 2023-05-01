@@ -6,16 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CongesSociaux_Web.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace CongesSociaux_Web.Data.Repository
 {
     public class SoutienRepository : RepositoryAsync<Soutien>, ISoutienRepository
     {
-        private readonly DbContext _db;
 
-        public SoutienRepository(DbContext db) : base(db)
-        {
-            _db = db;
-        }
+        public SoutienRepository(CongeSociauxDbContext db) : base(db){}
     }
 }
