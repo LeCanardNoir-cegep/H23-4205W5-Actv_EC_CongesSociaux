@@ -9,40 +9,41 @@ using CongesSociaux_Web.Data;
 using CongesSociaux_Web.Models;
 using CongesSociaux_Web.Models.ViewModels;
 using CongesSociaux_Web.Data.Repository.IRepository;
+using CongesSociaux_Web.Services;
+using CongesSociaux_Web.Services.Interfaces;
 
 namespace CongesSociaux_Web.Controllers
 {
     public class DepartementsController : Controller
     {
         private readonly IUnitOfWork _UnitOfWork;
+        private readonly IDepartementControllerService _departementService;
 
-        public DepartementsController(IUnitOfWork unitOfwork)
+        public DepartementsController(IUnitOfWork unitOfwork, IDepartementControllerService departementService)
         {
             _UnitOfWork = unitOfwork;
+            _departementService = departementService;
         }
 
         // GET: Departements
         public async Task<IActionResult> Index()
         {
-              return _UnitOfWork.Departements != null ? 
-                          View(await _UnitOfWork.Departements.GetAllAsync()) :
-                          Problem("Entity set 'CongeSociauxDbContext.Departements'  is null.");
+            var data = await _departementService.Index();
+            return data != null 
+                        ? View(data) 
+                        : Problem("Entity set 'CongeSociauxDbContext.Departements'  is null.");
         }
 
         // GET: Departements/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _UnitOfWork.Departements == null)
-            {
+            if (id == null ) 
                 return NotFound();
-            }
 
-            var departement = await _UnitOfWork.Departements
-                .GetFirstOrDefaultAsync(m => m.Id == id);
-            if (departement == null)
-            {
+            var departement = await _departementService.Details((int)id);
+
+            if (departement == null) 
                 return NotFound();
-            }
 
             return View(departement);
         }
@@ -58,12 +59,11 @@ namespace CongesSociaux_Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Code")] CreateDepartementVM vm)
+        public async Task<IActionResult> Create([Bind("Id,Name,Code")] DepartementVM vm)
         {
             if (ModelState.IsValid)
             {
-                await _UnitOfWork.Departements.AddAsync(new Departement { Id = vm.Id, Name = vm.Name, Code = vm.Code});
-                _UnitOfWork.save();
+                await _departementService.Create(vm);
                 return RedirectToAction(nameof(Index));
             }
             return View(vm);

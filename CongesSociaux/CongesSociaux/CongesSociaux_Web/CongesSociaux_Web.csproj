@@ -22,7 +22,6 @@
   <ItemGroup>
     <Folder Include="Areas\Administration\" />
     <Folder Include="Areas\Employes\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

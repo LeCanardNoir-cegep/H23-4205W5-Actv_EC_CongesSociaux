@@ -2,7 +2,7 @@
 
 namespace CongesSociaux_Web.Models.ViewModels
 {
-    public class CreateDepartementVM
+    public class DepartementVM
     {
         [Key]
         public int Id { get; set; }
