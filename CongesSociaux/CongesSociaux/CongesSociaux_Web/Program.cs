@@ -22,6 +22,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IDepartementControllerService, DepartementControllerService>();
+builder.Services.AddScoped<IEnseignantControllerService, EnseignantControllerService>();
 
 var app = builder.Build();
 

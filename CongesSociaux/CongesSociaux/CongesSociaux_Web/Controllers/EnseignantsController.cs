@@ -12,29 +12,31 @@ namespace CongesSociaux_Web.Controllers
 {
     public class EnseignantsController : Controller
     {
-        private readonly CongeSociauxDbContext _context;
+        private readonly CongeSociauxDbContext _unitOfWork;
+        private readonly IEnseignantControllerService _enseignantService;
 
-        public EnseignantsController(CongeSociauxDbContext context)
+        public EnseignantsController(CongeSociauxDbContext context, IEnseignantControllerService enseignantService)
         {
-            _context = context;
+            _unitOfWork = context;
+            _enseignantService = enseignantService;
         }
 
         // GET: Enseignants
         public async Task<IActionResult> Index()
         {
-            var congeSociauxDbContext = _context.Enseignants.Include(e => e.Departement);
-            return View(await congeSociauxDbContext.ToListAsync());
+            var data = await _enseignantService.Index();
+            return View(data);
         }
 
         // GET: Enseignants/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Enseignants == null)
+            if (id == null || _unitOfWork.Enseignants == null)
             {
                 return NotFound();
             }
 
-            var enseignant = await _context.Enseignants
+            var enseignant = await _unitOfWork.Enseignants
                 .Include(e => e.Departement)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (enseignant == null)
@@ -48,7 +50,7 @@ namespace CongesSociaux_Web.Controllers
         // GET: Enseignants/Create
         public IActionResult Create()
         {
-            ViewData["DepartementId"] = new SelectList(_context.Departements, "Id", "Name");
+            ViewData["DepartementId"] = new SelectList(_unitOfWork.Departements, "Id", "Name");
             return View();
         }
 
@@ -61,28 +63,28 @@ namespace CongesSociaux_Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(enseignant);
-                await _context.SaveChangesAsync();
+                _unitOfWork.Add(enseignant);
+                await _unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartementId"] = new SelectList(_context.Departements, "Id", "Name", enseignant.DepartementId);
+            ViewData["DepartementId"] = new SelectList(_unitOfWork.Departements, "Id", "Name", enseignant.DepartementId);
             return View(enseignant);
         }
 
         // GET: Enseignants/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Enseignants == null)
+            if (id == null || _unitOfWork.Enseignants == null)
             {
                 return NotFound();
             }
 
-            var enseignant = await _context.Enseignants.FindAsync(id);
+            var enseignant = await _unitOfWork.Enseignants.FindAsync(id);
             if (enseignant == null)
             {
                 return NotFound();
             }
-            ViewData["DepartementId"] = new SelectList(_context.Departements, "Id", "Name", enseignant.DepartementId);
+            ViewData["DepartementId"] = new SelectList(_unitOfWork.Departements, "Id", "Name", enseignant.DepartementId);
             return View(enseignant);
         }
 
@@ -102,8 +104,8 @@ namespace CongesSociaux_Web.Controllers
             {
                 try
                 {
-                    _context.Update(enseignant);
-                    await _context.SaveChangesAsync();
+                    _unitOfWork.Update(enseignant);
+                    await _unitOfWork.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -118,19 +120,19 @@ namespace CongesSociaux_Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["DepartementId"] = new SelectList(_context.Departements, "Id", "Name", enseignant.DepartementId);
+            ViewData["DepartementId"] = new SelectList(_unitOfWork.Departements, "Id", "Name", enseignant.DepartementId);
             return View(enseignant);
         }
 
         // GET: Enseignants/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Enseignants == null)
+            if (id == null || _unitOfWork.Enseignants == null)
             {
                 return NotFound();
             }
 
-            var enseignant = await _context.Enseignants
+            var enseignant = await _unitOfWork.Enseignants
                 .Include(e => e.Departement)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (enseignant == null)
@@ -146,23 +148,23 @@ namespace CongesSociaux_Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Enseignants == null)
+            if (_unitOfWork.Enseignants == null)
             {
                 return Problem("Entity set 'CongeSociauxDbContext.Enseignants'  is null.");
             }
-            var enseignant = await _context.Enseignants.FindAsync(id);
+            var enseignant = await _unitOfWork.Enseignants.FindAsync(id);
             if (enseignant != null)
             {
-                _context.Enseignants.Remove(enseignant);
+                _unitOfWork.Enseignants.Remove(enseignant);
             }
             
-            await _context.SaveChangesAsync();
+            await _unitOfWork.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool EnseignantExists(int id)
         {
-          return (_context.Enseignants?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_unitOfWork.Enseignants?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
