@@ -16,7 +16,7 @@ namespace CongesSociaux_Web.Data
             #endregion
 
             #region Soutient
-            builder.Entity<Soutien>().HasData(new Soutien() { Id = 2, Prenom = "Viateur", Nom = "La Moppe", Poste = "Youpie", DateEmbauche = new DateTime()});
+            builder.Entity<Soutien>().HasData(new Soutien() { Id = 1, Prenom = "Viateur", Nom = "La Moppe", Poste = "Youpie", DateEmbauche = new DateTime()});
             #endregion
         }
     }
