@@ -7,21 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CongesSociaux_Web.Data;
 using CongesSociaux_Web.Models;
-using CongesSociaux_Web.Models.ViewModels;
 using CongesSociaux_Web.Data.Repository.IRepository;
 using CongesSociaux_Web.Services;
 using CongesSociaux_Web.Services.Interfaces;
+using CongesSociaux_Web.ViewModels;
 
 namespace CongesSociaux_Web.Controllers
 {
     public class DepartementsController : Controller
     {
-        private readonly IUnitOfWork _UnitOfWork;
         private readonly IDepartementControllerService _departementService;
 
-        public DepartementsController(IUnitOfWork unitOfwork, IDepartementControllerService departementService)
+        public DepartementsController(IDepartementControllerService departementService)
         {
-            _UnitOfWork = unitOfwork;
             _departementService = departementService;
         }
 
@@ -72,16 +70,12 @@ namespace CongesSociaux_Web.Controllers
         // GET: Departements/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _UnitOfWork.Departements == null)
+            var departement = await _departementService.Details((int)id);
+            if (id == null || departement == null)
             {
                 return NotFound();
             }
 
-            var departement = await _UnitOfWork.Departements.GetFirstOrDefaultAsync(d => d.Id == id);
-            if (departement == null)
-            {
-                return NotFound();
-            }
             return View(departement);
         }
 
@@ -90,9 +84,9 @@ namespace CongesSociaux_Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Code")] Departement departement)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Code")] DepartementVM vm)
         {
-            if (id != departement.Id)
+            if (id != vm.Id)
             {
                 return NotFound();
             }
@@ -101,12 +95,11 @@ namespace CongesSociaux_Web.Controllers
             {
                 try
                 {
-                    _UnitOfWork.Departements.Update(departement);
-                    _UnitOfWork.save();
+                    await _departementService.Update(vm);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DepartementExists(departement.Id))
+                    if (! await _departementService.IsExist(id))
                     {
                         return NotFound();
                     }
@@ -117,18 +110,19 @@ namespace CongesSociaux_Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(departement);
+            return View(vm);
         }
 
         // GET: Departements/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _UnitOfWork.Departements == null)
+            bool isExist = await _departementService.IsExist((int)id);
+            if (id == null || !isExist)
             {
                 return NotFound();
             }
 
-            var departement = await _UnitOfWork.Departements.GetFirstOrDefaultAsync(m => m.Id == id);
+            var departement = await _departementService.Delete((int)id);
             if (departement == null)
             {
                 return NotFound();
@@ -142,23 +136,18 @@ namespace CongesSociaux_Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_UnitOfWork.Departements == null)
+            if (await _departementService.EntityIsEmpty())
             {
                 return Problem("Entity set 'CongeSociauxDbContext.Departements'  is null.");
             }
-            var departement = await _UnitOfWork.Departements.GetFirstOrDefaultAsync( d => d.Id == id );
-            if (departement != null)
-            {
-                _UnitOfWork.Departements.Remove(departement);
-            }
-            
-            _UnitOfWork.save();
+
+            await _departementService.Delete(id, true);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DepartementExists(int id)
+        private async Task<bool> DepartementExistsAsync(int id)
         {
-          return (_UnitOfWork.Departements?.GetFirstOrDefaultAsync(e => e.Id == id) != null );
+            return await _departementService.IsExist(id);
         }
     }
 }

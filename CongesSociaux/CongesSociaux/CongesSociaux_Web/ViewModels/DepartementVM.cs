@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CongesSociaux_Web.Models;
+using System.ComponentModel.DataAnnotations;
 
-namespace CongesSociaux_Web.Models.ViewModels
+namespace CongesSociaux_Web.ViewModels
 {
     public class DepartementVM
     {
-        [Key]
         public int Id { get; set; }
 
         [Required]
@@ -13,5 +13,7 @@ namespace CongesSociaux_Web.Models.ViewModels
 
         [Required]
         public int Code { get; set; }
+
+        public List<Enseignant>? Enseignants { get; set; }
     }
 }

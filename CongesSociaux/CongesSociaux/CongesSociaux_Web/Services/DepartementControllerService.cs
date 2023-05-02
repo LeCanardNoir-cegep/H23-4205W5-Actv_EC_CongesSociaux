@@ -1,8 +1,8 @@
 ﻿using CongesSociaux_Web.Data.Repository;
 using CongesSociaux_Web.Data.Repository.IRepository;
 using CongesSociaux_Web.Models;
-using CongesSociaux_Web.Models.ViewModels;
 using CongesSociaux_Web.Services.Interfaces;
+using CongesSociaux_Web.ViewModels;
 
 namespace CongesSociaux_Web.Services
 {
@@ -22,19 +22,37 @@ namespace CongesSociaux_Web.Services
             _unitOfWork.save();
         }
 
-        public Task Delete(int id, bool confirmed)
+        public async Task Delete(int id, bool confirmed)
         {
-            throw new NotImplementedException();
+            var departement = await _unitOfWork.Departements.GetFirstOrDefaultAsync(d => d.Id == id);
+            if (departement != null)
+            {
+                _unitOfWork.Departements.Remove(departement);
+            }
+
+            _unitOfWork.save();
         }
 
-        public Task Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Departement?> Details(int id)
+        public async Task<Departement> Delete(int id)
         {
             return await _unitOfWork.Departements.GetFirstOrDefaultAsync( d => d.Id == id );
+        }
+
+        public async Task<DepartementVM?> Details(int id)
+        {
+            var data = await _unitOfWork.Departements.GetFirstOrDefaultAsync(d => d.Id == id);
+            DepartementVM vm = null;
+
+            if(data != null)
+            vm = new DepartementVM
+            {
+                Id = data.Id,
+                Name = data.Name,
+                Code = data.Code,
+                Enseignants = data.Enseignants
+            };
+
+            return vm;
         }
 
         public async Task<IEnumerable<DepartementVM>?> Index()
@@ -53,9 +71,18 @@ namespace CongesSociaux_Web.Services
             return await _unitOfWork.Departements.GetFirstOrDefaultAsync(x => x.Id == id) != null;
         }
 
-        public Task<Departement> Update(Departement model)
+        public async Task Update(DepartementVM vm)
         {
-            throw new NotImplementedException();
+            Departement data =  await _unitOfWork.Departements.GetFirstOrDefaultAsync( d => d.Id == vm.Id);
+            if (data != null)
+            {
+                data.Code = vm.Code;
+                data.Name = vm.Name;
+                _unitOfWork.Departements.Update(data);
+                _unitOfWork.save();
+            }
         }
+
+        public async Task<bool> EntityIsEmpty() => _unitOfWork.Departements == null;
     }
 }

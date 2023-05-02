@@ -1,5 +1,5 @@
-﻿using CongesSociaux_Web.Models.ViewModels;
-using CongesSociaux_Web.Models;
+﻿using CongesSociaux_Web.Models;
+using CongesSociaux_Web.ViewModels;
 
 namespace CongesSociaux_Web.Services.Interfaces
 {
