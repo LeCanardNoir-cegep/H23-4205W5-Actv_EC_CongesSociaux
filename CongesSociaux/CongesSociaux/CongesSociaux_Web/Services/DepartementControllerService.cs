@@ -27,6 +27,16 @@ namespace CongesSociaux_Web.Services
             var departement = await _unitOfWork.Departements.GetFirstOrDefaultAsync(d => d.Id == id);
             if (departement != null)
             {
+                var enseignants = await _unitOfWork.Enseignants.GetAllAsync();
+                departement.Enseignants = null;
+                foreach (var item in enseignants)
+                {
+                    item.DepartementId = null;
+                }
+                _unitOfWork.Enseignants.UpdateRange(enseignants);
+                _unitOfWork.Departements.Update(departement);
+                _unitOfWork.save();
+
                 _unitOfWork.Departements.Remove(departement);
             }
 

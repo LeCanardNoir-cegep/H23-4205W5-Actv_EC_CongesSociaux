@@ -9,7 +9,7 @@ namespace CongesSociaux_Web.Models
         public string Specialite { get; set; }
 
         [ForeignKey(nameof(Departement))]
-        public int DepartementId { get; set; }
-        public Departement Departement { get; set; }
+        public int? DepartementId { get; set; }
+        public Departement? Departement { get; set; }
     }
 }
