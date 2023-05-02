@@ -14,7 +14,7 @@ namespace CongesSociaux_Web.Models
         [Required]
         public int Code { get; set; }
 
-        public List<Enseignant>? Enseignants { get; set; }
+        public List<Enseignant>? Enseignants { get; set; } = null;
 
     }
 }

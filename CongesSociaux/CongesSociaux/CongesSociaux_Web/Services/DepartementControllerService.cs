@@ -24,23 +24,14 @@ namespace CongesSociaux_Web.Services
 
         public async Task Delete(int id, bool confirmed)
         {
-            var departement = await _unitOfWork.Departements.GetFirstOrDefaultAsync(d => d.Id == id);
+            var departement = await _unitOfWork.Departements.GetFirstOrDefaultAsync(d => d.Id == id, includedProperties: "Enseignants");
             if (departement != null)
             {
-                var enseignants = await _unitOfWork.Enseignants.GetAllAsync();
-                departement.Enseignants = null;
-                foreach (var item in enseignants)
-                {
-                    item.DepartementId = null;
-                }
-                _unitOfWork.Enseignants.UpdateRange(enseignants);
-                _unitOfWork.Departements.Update(departement);
-                _unitOfWork.save();
 
                 _unitOfWork.Departements.Remove(departement);
+                _unitOfWork.save();
             }
 
-            _unitOfWork.save();
         }
 
         public async Task<Departement> Delete(int id)
