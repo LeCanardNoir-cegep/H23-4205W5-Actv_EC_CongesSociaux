@@ -2,7 +2,7 @@
 
 namespace CongesSociaux_Web.Services
 {
-    public class AbstractControllerServices
+    public abstract class AbstractControllerServices
     {
         protected readonly IUnitOfWork _unitOfWork;
 
